@@ -7,10 +7,9 @@ export default function Home() {
   const [question, setQuestion] = useState("");
   const router = useRouter();
 
-  const handleStart = () => {
-    const encoded = encodeURIComponent(question || "给我一个关于近期状态的指引");
-    router.push(`/reading?question=${encoded}`);
-  };
+const handleStart = () => {
+  router.push("/select");
+};
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">

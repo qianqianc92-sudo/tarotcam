@@ -3,35 +3,58 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const [question, setQuestion] = useState("");
+export default function HomePage() {
   const router = useRouter();
+  const [question, setQuestion] = useState("");
 
-const handleStart = () => {
-  router.push("/select");
-};
+  const handleStart = () => {
+    const finalQuestion = question.trim() || "我最近的状态会怎样？";
+    localStorage.setItem("tarot-user-question", finalQuestion);
+    router.push("/select");
+  };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-      <div className="max-w-2xl w-full text-center px-6">
-        <h1 className="text-5xl font-bold mb-6">塔罗互动抽牌</h1>
-        <p className="text-zinc-300 text-lg mb-8">
-          一个带有仪式感的在线卡牌探索体验
+    <main
+      className="min-h-screen text-white flex items-center justify-center px-6"
+      style={{ background: "#1b1a2e" }}
+    >
+      <div className="w-full max-w-2xl text-center">
+        <p
+          className="text-xs mb-3"
+          style={{ letterSpacing: "0.35em", color: "#d7c27a" }}
+        >
+          TAROT AI READING
         </p>
 
-        <input
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="输入你此刻想问的问题..."
-          className="w-full px-4 py-3 rounded-2xl bg-zinc-900 border border-zinc-700 outline-none mb-4"
-        />
+        <h1 className="text-5xl font-bold mb-4">塔罗互动解读</h1>
 
-        <button
-          onClick={handleStart}
-          className="px-6 py-3 rounded-2xl bg-white text-black font-medium hover:opacity-90 transition"
-        >
-          开始抽牌
-        </button>
+        <p className="text-zinc-300 leading-8 mb-8">
+          输入你此刻最想问的问题，然后开始抽牌。
+        </p>
+
+        <div className="space-y-4">
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="比如：我最近找工作的状态会怎样？"
+            className="w-full min-h-[140px] rounded-2xl px-5 py-4 text-white outline-none resize-none"
+            style={{
+              background: "rgba(20,20,30,0.45)",
+              border: "1px solid rgba(231,211,139,0.25)",
+            }}
+          />
+
+          <button
+            onClick={handleStart}
+            className="px-6 py-3 rounded-2xl font-medium transition"
+            style={{
+              background: "#f4d97c",
+              color: "#161616",
+            }}
+          >
+            开始抽牌
+          </button>
+        </div>
       </div>
     </main>
   );

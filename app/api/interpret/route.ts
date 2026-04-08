@@ -5,6 +5,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { question, cards } = body;
 
+    if (!cards || !Array.isArray(cards) || cards.length !== 3) {
+      return NextResponse.json(
+        { error: "抽牌结果不完整" },
+        { status: 400 }
+      );
+    }
+
     const summary = cards
       .map(
         (card: { position: string; name: string; orientation: string }) =>
@@ -13,18 +20,22 @@ export async function POST(req: Request) {
       .join("\n");
 
     const fakeInterpretation = `总体解读：
-你当前正处在一个需要重新梳理内在状态与外部选择的阶段。这组三张牌更像是在提示你，过去的经验正在影响你此刻的判断，而未来的关键在于你是否愿意更清楚地面对真正的问题。
+你当前正处在一个需要重新梳理内心状态与现实方向的阶段。三张牌组合在一起，更像是在提醒你：过去的经历仍然影响着你此刻的判断，而未来的突破点在于你是否愿意更清楚地面对真正的问题。
 
-分位置解读：
-过去：这张牌说明你的过往经历对现在的心态有明显影响，可能留下了某种习惯、情绪或判断模式。
-现在：你此刻最重要的主题，是认真看待自己正在面对的局面，并且停止模糊化处理。
-未来：未来并不是被固定决定的，而是在提醒你，只要你愿意调整思路，局面会出现新的理解方式。
+过去：
+这张牌说明你过去积累的经验、情绪或某种惯性，依然在影响你现在的状态。它不一定是坏事，但它说明你不是从“空白”出发，而是带着某些过去的印记进入现在。
+
+现在：
+现在这张牌强调的是你当前最需要看清的主题。也许是情绪、也许是关系、也许是行动方向。它在提醒你，不要只盯着表面的结果，更要去看自己当下真正卡住的位置。
+
+未来：
+未来这张牌并不是绝对预言，而是一种趋势提示。它更像是在说：如果你延续当前的理解方式，事情可能会朝这个方向展开；如果你愿意调整，也会有新的打开方式。
 
 建议：
-不要急着追求一个立刻的答案，先把注意力放回你真正想问的核心问题上。
+先不要急着追求一个“立刻正确”的答案，而是把注意力放回你真正想解决的问题本身。明确自己的核心诉求，反而会更快看清下一步。
 
 用户问题：
-${question || "未提供"}
+${question || "未提供问题"}
 
 抽牌结果：
 ${summary}`;
@@ -33,6 +44,10 @@ ${summary}`;
       interpretation: fakeInterpretation,
     });
   } catch (error) {
-    return NextResponse.json({ error: "解读生成失败" }, { status: 500 });
+    console.error("fake interpret error:", error);
+    return NextResponse.json(
+      { error: "解读生成失败" },
+      { status: 500 }
+    );
   }
 }
